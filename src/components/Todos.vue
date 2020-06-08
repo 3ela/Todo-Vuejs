@@ -14,7 +14,7 @@
     <v-card>
       <v-btn text
              class='float-left ma-2'
-             color='indigo' type='button' @click='allDone'>Clear Completed</v-btn>
+             color='indigo' type='button' @click='allDone()'>Clear Completed</v-btn>
       <v-tabs v-model='tab'
               background-color="white"
               color="deep-purple accent-4"
@@ -29,7 +29,8 @@
               <v-card flat v-for='todo in Todos' :key='todo.text'>
                   <v-row align='center'>
                     <v-col md='6'>
-                      <v-checkbox v-model="todo.done" :label='todo.text'></v-checkbox>
+                      <v-checkbox v-model="todo.done"
+                                  :label='todo.text'></v-checkbox>
                     </v-col>
                     <v-col md='6'>
                       <v-icon @click='removeTodo(todo)'
@@ -60,9 +61,9 @@
           <v-tab-item key='completed'>
              <v-container>
               <v-card flat v-for='todo in Todos' :key='todo.text'>
-                  <v-row v-if='todo.done' align='center'>
+                  <v-row align='center' v-if='todo.done'>
                     <v-col md='6'>
-                      <v-checkbox :success='todo.done'
+                      <v-checkbox :success='true'
                                   v-model="todo.done"
                                   :label='todo.text' >
                       </v-checkbox>
@@ -97,6 +98,9 @@ export default ({
     window.addEventListener('beforeunload', this.handler);
   },
 
+  computed: {
+  },
+
   methods: {
     formSubmit() {
       if (this.title) {
@@ -114,11 +118,8 @@ export default ({
     },
 
     allDone() {
-      this.Todos.forEach((todo, index) => {
-        if (todo.done) {
-          this.Todos.splice(index, 1);
-        }
-      });
+      const activeTodos = this.Todos.filter((todo) => todo.done === false);
+      this.Todos = activeTodos;
     },
 
     handler() {
